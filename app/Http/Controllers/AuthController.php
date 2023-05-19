@@ -27,7 +27,6 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        // Check password
         if ( is_null($user) || !Hash::check($request->password, $user->password)) {
             return  User::create([
                 'name' =>$request->name,
