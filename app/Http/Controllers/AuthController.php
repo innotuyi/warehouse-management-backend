@@ -40,9 +40,14 @@ class AuthController extends Controller
 
         $token = $user->createToken('myapptoken')->plainTextToken;
         
-        return $token;
+        return $token;   
+    }
 
-    
-        
+    public function logout()
+    {
+
+        auth()->user()->tokens()->delete();
+
+        return true;
     }
 }
