@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
@@ -33,6 +34,9 @@ Route::post('/order/create', [OrderController::class, 'create']);
 Route::put('/order/update/{id}', [OrderController::class, 'update']);
 
 Route::get('/order/{id}', [OrderController::class, 'show']);
+
+Route::get('/inventory/report', [InventoryController::class, 'getReport']);
+
 
 
 
