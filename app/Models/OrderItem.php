@@ -11,6 +11,6 @@ class OrderItem extends Model
 
     public $table = 'OrderItem';
 
-    public $fillable = ['quantiy', 'price'];
+    public $fillable = ['order_id','quantity', 'price'];
     
 }

@@ -83,8 +83,6 @@ class ProductController extends Controller
         if(!$products) {
 
             return response()->json(['msg'=>"no product found "]);
-
-
         }
 
         return response()->json($products);
