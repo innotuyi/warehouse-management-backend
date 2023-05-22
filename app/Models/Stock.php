@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Order extends Model
+class Stock extends Model
 {
     use HasFactory;
 
+    public $table = 'Stock';
 
-    public $fillable = ['customer_id', 'product_id', 'quantity', 'price'];
-
+    public $fillable = ['quantity', 'product_id'];
+    
 }

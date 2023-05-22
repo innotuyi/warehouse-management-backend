@@ -1,95 +1,71 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Models\Product;
+use App\Service\ProductService;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    
 
 
-    public function getAllProducts() {
 
+    public function __construct(protected ProductService $service)
+    {
+    }
 
-        $products = Product::all();
+    public function getAllProducts()
+    {
+
+        $products =  $this->service->getAllProducts();
 
         return response()->json($products);
-
-
-    }
-
-    public function AddProduct(Request $request) {
-
-
-
-        //   $validatedData = $request->validate([
-        //     'name' => 'required',
-        //     'description' => 'required|string',
-        //     'quantity' => 'required|integer|min:1',
-        //     'price'=> 'required|integer|min:1',
-        // ]);
-
-
-       return  Product::create([
-
-            'name' => $request->name,
-
-            'description' => $request->description,
-
-            'quantity' => $request->quantity,
-
-            'price'=> $request->price,
-
-
-       ]);
-
-
     }
 
 
-    public function  UpdateProduct(Request $request, $id) {
+    public function SingleProduct($id)
+    {
 
 
-         $product = Product::find( $id);
+        $products =  $this->service->SingleProduct($id);
 
-         if(!$product) {
+        return response()->json($products);
+    }
 
-            return response()->json(['msg'=>"no product found"]);
-         }
+    public function AddProduct(Request $request)
+    {
+
+        
 
 
-
-     return    Product::where('id', $id)->update([
-
-            'name' => $request->name,
-
-            'description' => $request->description,
-
-            'quantity' => $request->quantity,
-
-            'price'=> $request->price,
-            
+        $request->validate([
+            'name' => 'required',
+            'description' => 'required|string',
+            'price' => 'required|integer|min:1',
         ]);
 
-    }
 
-    public function searchProduct($keyword) {
+        try {
 
+            $products =  $this->service->AddProduct($request->name, $request->description, $request->price);
 
-        $products = Product::find('name', $keyword);
+            return response()->json($products);
+        } catch (\Throwable $th) {
 
-        if(!$products) {
-
-            return response()->json(['msg'=>"no product found "]);
+            throw $th;
         }
-
-        return response()->json($products);
-
-
-
     }
 
 
+    public function  UpdateProduct(Request $request, $id)
+    {
+
+
+        try {
+            $products =  $this->service->UpdateProduct($id, $request->name, $request->description, $request->price);
+
+            return response()->json($products);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
 }

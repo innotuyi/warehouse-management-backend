@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateUserRequest extends FormRequest
+class TestInputRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,23 +21,10 @@ class CreateUserRequest extends FormRequest
      */
     public function rules(): array
     {
-        
         return [
             'name' => 'required|string',
-            'email' => 'required|string|unique:users,email',
-            'password' => 'required|string|confirmed'
+            'email' => 'required|string',
+            'password' => 'required|string'
         ];
-
-
-        
-    }
-
-
-
-    public function passedValidation()
-    {
-        
-        $this->validated();
-      
     }
 }

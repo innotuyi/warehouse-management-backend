@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('customer_id');
             $table->unsignedBigInteger('product_id');
-            $table->date('order_date');
-            $table->string('status');
+            $table->integer('quantity');
+            $table->decimal('price', 8, 2);
+            $table->string('status')->default('pending');
             $table->timestamps();
 
             $table->foreign('customer_id')->references('id')->on('users')
