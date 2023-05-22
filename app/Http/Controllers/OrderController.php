@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Service\OrderService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -67,4 +69,31 @@ class OrderController extends Controller
 
         return response()->json($order);
     }
+
+
+    public function getAllcustomerOrders()
+    {
+        $user = Auth::user();
+
+        $orders = Order::where('customer_id', $user->id)->get();
+
+        return response()->json($orders);
+    }
+
+ 
+
+    public function getCustomersReport() {
+
+        $customers = Order::select('customer_id', DB::raw('COUNT(*) as order_count'), DB::raw('AVG(price) as average_order_value'))
+                         ->groupBy('customer_id')
+                         ->orderByDesc('order_count')
+                         ->get();
+
+          return $customers;
+
+
+    }
+
+
+
 }

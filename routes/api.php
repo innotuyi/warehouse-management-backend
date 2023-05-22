@@ -23,6 +23,8 @@ Route::post('/logout', [AuthController::class, 'logout']);
 Route::group(['middleware' => 'customer'], function () {
     
     Route::get('/products', [ProductController::class, 'getAllProducts']);
+
+    Route::get('/customer/orders', [ProductController::class, 'getAllcustomerOrders']);
     
     Route::post('/order/create', [OrderController::class, 'create']);
 });
@@ -48,6 +50,10 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('/inventory/report', [InventoryController::class, 'getReport']);
 
     Route::get('/sales/report', [SalesController::class, 'getReport']);
+
+    Route::get('/revenue/report', [SalesController::class, 'getRevenueReport']);
+
+    Route::get('/customers/report', [OrderController::class, 'getCustomersReport']);
 
     Route::post('/stock/create', [stockController::class, 'createStock']);
 

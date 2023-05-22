@@ -5,20 +5,28 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SalesController extends Controller
 {
     public function getReport()
     {
 
-        $startDate = Carbon::now()->subDays(30);
-        $endDate = Carbon::now();
+        $sales = Order::select('product_id', DB::raw('SUM(quantity) as total_quantity'), DB::raw('SUM(price) as total_revenue'))
+             ->groupBy('product_id')
+             ->get();
 
-        $salesData = Order::whereBetween('created_at', [$startDate, $endDate])
-            ->selectRaw('DATE(created_at) as date,  COUNT(*) as orders')
-            ->groupBy('date')
-            ->get();   
 
-        return response()->json($salesData);
+        return response()->json($sales);
     }
+
+    public function getRevenueReport() {
+
+        $revenue = Order::select(DB::raw('SUM(price) as total_revenue'), DB::raw('AVG(price) as average_revenue'))
+                ->get();
+
+         return $revenue;
+
+    }
+    
 }
