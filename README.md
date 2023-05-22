@@ -5,10 +5,10 @@
 
 ### Clone the project
 ```
-git clone
+git clone https://github.com/innotuyi/warehouse-management-backend.git
 
 ```
-### Enter in direcotory where it save
+### Enter in directory where it saved
 ```
 
 cd /path/to/your/project
