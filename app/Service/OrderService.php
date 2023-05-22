@@ -6,53 +6,57 @@ namespace App\Service;
 
 use App\Models\Order;
 use App\Models\Product;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class OrderService
 {
 
-    public function create($product_id,$quantity,$price  )
+    public function create($product_id, $quantity)
     {
 
 
-        $product = Product::find($product_id);
+        try {
+            DB::transaction(function () use ($product_id, $quantity) {
 
-        $price   = $product->price;
+                $product = Product::find($product_id);
+                $price = $product->price;
 
-        $user = Auth::user();
+                $user = Auth::user();
+                if ($user->role === 'customer') {
+                    $order = Order::create([
+                        'customer_id' => $user->id,
+                        'product_id' => $product_id,
+                        'quantity' => $quantity,
+                        'price' => $price,
+                    ]);
+                }
 
-        if ($user->role === 'customer') {
-            $order = Order::create([
-                'customer_id' => $user->id,
-                'product_id' => $product_id,
-                'quantity' => $quantity,
-                'price' => $price,
-            ]);
+                $order = Order::create([
+                    'customer_id' => $user->id,
+                    'product_id' => $product_id,
+                    'quantity' => $quantity,
+                    'price' => $price,
+                ]);
+
+                $product = Product::find($order->product_id);
+                $quantity = $order->quantity;
+                $product->quantity -= $quantity;
+                $product->save();
+
+                DB::table('Stock')
+                    ->where('id', $product->id)
+                    ->decrement('quantity', $quantity);
+
+                return $order;
+            });
+        } catch (QueryException $e) {
+
+            return response()->json(['error' => $e->getMessage()]);
+        } catch (\Exception $e) {
+
+            return response()->json(['error' => 'An error occurred'], 500);
         }
-
-        $order = Order::create([
-            'customer_id' => $user->id,
-            'product_id' => $product_id,
-            'quantity' => $quantity,
-            'price' =>  $price,
-
-        ]);
-
-        $product = Product::find($order->product_id);
-
-        $quantity = $order->quantity;
-
-        DB::update('UPDATE Product SET quantity = quantity - ? WHERE id = ?', [$quantity, $product->id]);
-
-        DB::update('UPDATE Stock SET quantity = quantity - ? WHERE id = ?', [$quantity, $product->id]);
-
-      return  $order;
-
     }
-
-    
-
-
-    
 }

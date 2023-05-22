@@ -12,21 +12,26 @@ class SalesController extends Controller
     public function getReport()
     {
 
-        $sales = Order::select('product_id', DB::raw('SUM(quantity) as total_quantity'), DB::raw('SUM(price) as total_revenue'))
-             ->groupBy('product_id')
-             ->get();
-
-
-        return response()->json($sales);
+        try {
+            $sales = Order::select('product_id', DB::raw('SUM(quantity) as total_quantity'), DB::raw('SUM(price) as total_revenue'))
+                ->groupBy('product_id')
+                ->get();
+            return response()->json($sales);
+        } catch (\Throwable $th) {
+            throw $th->getMessage();
+        }
     }
 
-    public function getRevenueReport() {
+    public function getRevenueReport()
+    {
 
-        $revenue = Order::select(DB::raw('SUM(price) as total_revenue'), DB::raw('AVG(price) as average_revenue'))
+        try {
+            $revenue = Order::select(DB::raw('SUM(price) as total_revenue'), DB::raw('AVG(price) as average_revenue'))
                 ->get();
 
-         return $revenue;
-
+            return $revenue;
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
-    
 }

@@ -8,21 +8,24 @@ use Illuminate\Http\Request;
 class InventoryController extends Controller
 {
 
-    public function getReport() {
-     
-        $products = Product::select('name', 'quantity')->get();
+    public function getReport()
+    {
+        try {
+            $products = Product::select('name', 'quantity')->get();
 
-        $reportData = [];
+            $reportData = [];
 
-        foreach ($products as $product) {
+            foreach ($products as $product) {
 
-            $reportData[] = [
-                'Product' => $product->name,
-                'Quantity' => $product->quantity,
-            ];
+                $reportData[] = [
+                    'Product' => $product->name,
+                    'Quantity' => $product->quantity,
+                ];
+            }
+
+            return $reportData;
+        } catch (\Throwable $th) {
+            throw $th;
         }
-
-        return $reportData;
     }
-    
 }
