@@ -18,8 +18,8 @@ class InventoryController extends Controller
             foreach ($products as $product) {
 
                 $reportData[] = [
-                    'Product' => $product->name,
-                    'Quantity' => $product->quantity,
+                    'product' => $product->name,
+                    'quantity' => $product->quantity,
                 ];
             }
 

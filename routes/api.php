@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardStatistics;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
@@ -31,6 +32,9 @@ Route::group(['middleware' => 'customer'], function () {
 
 Route::group(['middleware' => 'admin'], function () {
 
+    Route::get('/customer/orders', [ProductController::class, 'getAllcustomerOrders']);
+
+
     Route::get('/products', [ProductController::class, 'getAllProducts']);
 
     Route::get('/product/{id}', [ProductController::class, 'SingleProduct']);
@@ -60,9 +64,18 @@ Route::group(['middleware' => 'admin'], function () {
     Route::put('/stock/update/{id}', [stockController::class, 'updateStock']);
 
     Route::get('/stocks', [stockController::class, 'getAllStocks']);
+
+    Route::get('/dashboard/statistics/stock', [DashboardStatistics::class, 'getStockQuantity']);
+
+    Route::get('/dashboard/statistics/product', [DashboardStatistics::class, 'getTotalProduct']);
+
+    Route::get('/dashboard/statistics/order', [DashboardStatistics::class, 'getTotalOrder']);
+
+
+
 });
 
 
-//admin 2|6xcg0w6MciaweGTS4H23ZJ8H3NE9Qw7NWnU1pcec
+//admin 1|uarHHumCx7qzqmvj8zRygR28iNbEO4g6FF8iwQ0b
 
-//customer  3|q80Q23RZDcluEMZKJzsC3JicwF6JYzJVSJuhmCT7
+//customer 2|nGZUhqkswmFbi9JwZ70JIOq6CVYqZTtwOSvQtzpA

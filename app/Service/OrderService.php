@@ -45,11 +45,8 @@ class OrderService
                 $product->quantity -= $quantity;
                 $product->save();
 
-                DB::table('Stock')
-                    ->where('id', $product->id)
-                    ->decrement('quantity', $quantity);
-
-                return $order;
+            DB::select('UPDATE Stock SET quantity = quantity - ? WHERE product_id = ?', [$quantity, $product->id]);
+           
             });
         } catch (QueryException $e) {
 

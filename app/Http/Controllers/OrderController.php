@@ -18,7 +18,13 @@ class OrderController extends Controller
     public function getAllOrders()
     {
 
-        $orders = Order::all();
+        $user = Auth::user();
+
+        $orders = Order::select('Order_tbl.id as order_id', 'Product.name as product_name', 'users.name as customer_name', 'Order_tbl.quantity', 'Product.price', 'Order_tbl.status', 'Order_tbl.created_at')
+            ->join('Product', 'Product.id', '=', 'Order_tbl.product_id')
+            ->join('users', 'users.id', '=', 'Order_tbl.customer_id')
+            ->where('users.id', $user->id)
+            ->get();
 
         return response()->json($orders);
     }
@@ -80,20 +86,25 @@ class OrderController extends Controller
         return response()->json($orders);
     }
 
- 
+    public function getRevenueReport()
+    {
 
-    public function getCustomersReport() {
+        $revenue = Order::select(DB::raw('SUM(price) as total_revenue'), DB::raw('AVG(price) as average_revenue'))
+            ->get();
 
-        $customers = Order::select('customer_id', DB::raw('COUNT(*) as order_count'), DB::raw('AVG(price) as average_order_value'))
-                         ->groupBy('customer_id')
-                         ->orderByDesc('order_count')
-                         ->get();
-
-          return $customers;
-
-
+        return $revenue;
     }
 
+    public function getCustomersReport()
+    {
 
+        $customers = Order::select('customer_id', DB::raw('COUNT(*) as order_count'), DB::raw('AVG(price) as average_order_value'))
+            ->groupBy('customer_id')
+            ->orderByDesc('order_count')
+            ->get();
 
+        return $customers;
+    }
+    
+    
 }
