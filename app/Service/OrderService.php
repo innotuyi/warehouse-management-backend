@@ -24,6 +24,9 @@ class OrderService
                 $price = $product->price;
 
                 $user = Auth::user();
+
+                $order = "";
+                
                 if ($user->role === 'customer') {
                     $order = Order::create([
                         'customer_id' => $user->id,
@@ -32,14 +35,6 @@ class OrderService
                         'price' => $price,
                     ]);
                 }
-
-                $order = Order::create([
-                    'customer_id' => $user->id,
-                    'product_id' => $product_id,
-                    'quantity' => $quantity,
-                    'price' => $price,
-                ]);
-
                 $product = Product::find($order->product_id);
                 $quantity = $order->quantity;
                 $product->quantity -= $quantity;

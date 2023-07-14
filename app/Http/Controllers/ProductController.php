@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Service\ProductService;
 use Illuminate\Http\Request;
 
@@ -33,10 +34,6 @@ class ProductController extends Controller
 
     public function AddProduct(Request $request)
     {
-
-        
-
-
         $request->validate([
             'name' => 'required',
             'description' => 'required|string',
@@ -51,7 +48,7 @@ class ProductController extends Controller
             return response()->json($products);
         } catch (\Throwable $th) {
 
-            throw $th;
+            throw $th->getMessage();
         }
     }
 
@@ -62,7 +59,6 @@ class ProductController extends Controller
 
         try {
             $products =  $this->service->UpdateProduct($id, $request->name, $request->description, $request->price);
-
             return response()->json($products);
         } catch (\Throwable $th) {
             throw $th;
